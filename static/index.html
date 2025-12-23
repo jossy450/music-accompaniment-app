@@ -1,0 +1,673 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advanced Vocal Accompaniment AI - Professional Edition</title>
+    <link rel="icon" type="image/x-icon" href="/static/favicon.ico">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+            color: #e0e0e0;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container { max-width: 1200px; margin: 0 auto; }
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 30px 0;
+            border-bottom: 2px solid #ff6b35;
+        }
+        .header h1 { font-size: 2.5rem; color: #ff6b35; margin-bottom: 10px; text-shadow: 0 2px 10px rgba(255, 107, 53, 0.3); }
+        .header p { color: #b0b0b0; font-size: 1rem; }
+        .badge { display: inline-block; background: #ff6b35; color: white; padding: 8px 16px; border-radius: 20px; font-size: 0.85rem; margin-top: 10px; }
+        
+        /* --- Main Grid Layout --- */
+        .main-grid {
+            display: grid;
+            grid-template-columns: 1fr; /* Mobile-first: single column */
+            gap: 30px;
+        }
+        @media (min-width: 768px) { /* Tablet/Desktop: two columns */
+            .main-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        .panel {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 107, 53, 0.3);
+            border-radius: 12px;
+            padding: 25px;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+        .panel:hover { border-color: #ff6b35; box-shadow: 0 0 20px rgba(255, 107, 53, 0.2); }
+        .panel h2 { color: #ff6b35; margin-bottom: 20px; font-size: 1.3rem; display: flex; align-items: center; gap: 10px; }
+        .panel h3 { color: #e0e0e0; margin-top: 20px; margin-bottom: 12px; font-size: 1rem; font-weight: 600; }
+        
+        /* Full-width panel for Generate button */
+        .generate-panel { grid-column: 1 / -1; }
+
+        /* --- Form Elements --- */
+        .form-group { margin-bottom: 20px; }
+        label { display: block; margin-bottom: 8px; color: #b0b0b0; font-size: 0.95rem; font-weight: 500; }
+        input[type="file"], input[type="text"], input[type="number"], select { width: 100%; padding: 12px; background: rgba(255, 255, 255, 0.06); border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 8px; color: #e0e0e0; font-size: 0.95rem; }
+        .button-group { display: flex; gap: 10px; flex-wrap: wrap; }
+        .btn-primary, .btn-secondary { display: inline-flex; align-items: center; justify-content: center; gap: 6px; padding: 10px 16px; border-radius: 8px; border: none; cursor: pointer; font-size: 0.95rem; font-weight: 600; transition: all 0.2s ease; }
+        .btn-primary { background: #ff6b35; color: white; box-shadow: 0 4px 12px rgba(255, 107, 53, 0.3); }
+        .btn-primary:hover { background: #ff8252; box-shadow: 0 6px 16px rgba(255, 107, 53, 0.4); }
+        .btn-secondary { background: rgba(255, 255, 255, 0.08); color: #e0e0e0; border: 1px solid rgba(255, 255, 255, 0.15); }
+        .btn-secondary:hover { background: rgba(255, 255, 255, 0.15); }
+        .audio-player { width: 100%; margin-top: 10px; }
+        .hint { font-size: 0.8rem; color: #9a9a9a; margin-top: 5px; }
+        .checkbox-item { display: flex; align-items: center; gap: 8px; }
+        .checkbox-item input[type="checkbox"] { width: 16px; height: 16px; }
+
+        /* Specific Grids */
+        .vocal-mix-grid, .instrument-grid, .voice-part-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 15px;
+        }
+        @media (min-width: 480px) {
+            .vocal-mix-grid, .instrument-grid, .voice-part-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Advanced Vocal Accompaniment AI</h1>
+            <p>Record or upload your vocal, then let the band follow your voice – musically, in real time.</p>
+            <div class="badge">Vocal-Responsive Band • Studio-Grade Mix • Backing Vocal Engine</div>
+        </div>
+
+        <div id="status" class="status-message"></div>
+
+        <div class="main-grid">
+
+            <!-- Panel 1: Vocal & Mix -->
+            <div class="panel">
+                <h2>🎤 Vocal & Mix</h2>
+                <div class="vocal-mix-grid">
+                    <div class="form-group">
+                        <h3>Metronome (Recording Guide)</h3>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="metronomeEnabled" checked>
+                            <label for="metronomeEnabled" style="margin: 0;">Enable metronome</label>
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 10px; margin-top: 10px;">
+                            <span style="font-size:0.85rem;color:#b0b0b0;">Tempo</span>
+                            <input type="number" id="metronomeTempo" min="40" max="220" value="120" style="width:80px;">
+                        </div>
+                        <span class="hint">Guide only; not included in mixes.</span>
+                    </div>
+                    <div class="form-group">
+                        <h3>Upload Your Lead Vocal</h3>
+                        <div class="button-group">
+                            <button class="btn-secondary" id="recordBtn">🎙️ Record Vocal</button>
+                            <button class="btn-secondary" id="uploadVocalBtn">📁 Upload Vocal</button>
+                        </div>
+                        <input type="file" id="vocalFile" accept="audio/*" style="display:none;">
+                        <div id="vocalStatus" class="hint">No vocal uploaded or recorded.</div>
+                        <audio id="vocalPreview" class="audio-player" controls style="display:none;"></audio>
+                    </div>
+                </div>
+                <h3>🎤 Voice Rehearsal Recording</h3>
+                <div class="form-group">
+                    <div class="button-group">
+                        <button class="btn-primary" id="rehearsalRecordBtn" style="background: #1e90ff;">
+                            <span id="rehearsalBtnText">🔴 Record Rehearsal with Band</span>
+                        </button>
+                        <button class="btn-secondary" id="rehearsalStopBtn" style="display:none;">⏹️ Stop Recording</button>
+                    </div>
+                    <div id="rehearsalStatus" class="hint" style="margin-top: 8px;">Record your vocal while listening to the generated band.</div>
+                    <audio id="rehearsalPreview" class="audio-player" controls style="display:none;"></audio>
+                    <a id="rehearsalDownloadBtn" class="btn-secondary btn-small" href="#" download="rehearsal_take.wav" style="display:none; margin-top: 6px; text-decoration: none;">⬇️ Download Rehearsal</a>
+                </div>
+            </div>
+
+            <!-- Panel 2: Band & Style -->
+            <div class="panel">
+                <h2>🎸 Band & Style</h2>
+                <h3>Reference Track (Optional)</h3>
+                <div class="form-group">
+                    <label>Search Deezer</label>
+                    <div style="display: flex; gap: 10px;">
+                        <input type="text" id="referenceSearch" placeholder="e.g., 'Michael Bublé Feliz Navidad'" disabled>
+                        <button class="btn-secondary" id="searchBtn" style="flex: 0 0 auto; width: auto;" disabled>Search</button>
+                    </div>
+                    <div id="referenceResults" class="hint" style="margin-top: 8px; color: #ff6b35; font-weight: bold;">
+                        ⚠️ Deezer Search is currently unavailable. Please use the 'Upload Reference' option below.
+                    </div>
+                    <input type="hidden" id="referenceUrlInput" name="reference_url">
+                </div>
+                <h3>Music Style</h3>
+                <div class="form-group">
+                    <select id="musicStyle">
+                        <option value="pop" selected>Pop</option>
+                        <option value="rock">Rock</option>
+                        <option value="gospel">Gospel</option>
+                    </select>
+                </div>
+                <h3>Band Instruments</h3>
+                <div class="form-group">
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="instNone" checked>
+                        <label for="instNone">AI Producer Mode (No Selection)</label>
+                    </div>
+                    <span class="hint">Check this box to let the AI automatically select the best instruments.</span>
+                    <div id="manualInstrumentSelection" class="instrument-grid" style="margin-top: 10px;">
+                        <div class="checkbox-item"><input type="checkbox" id="instDrums" value="drums"><label for="instDrums">🥁 Drums</label></div>
+                        <div class="checkbox-item"><input type="checkbox" id="instBass" value="bass"><label for="instBass">🎸 Bass</label></div>
+                        <div class="checkbox-item"><input type="checkbox" id="instPiano" value="piano"><label for="instPiano">🎹 Piano</label></div>
+                        <div class="checkbox-item"><input type="checkbox" id="instGuitar" value="guitar"><label for="instGuitar">🎸 Guitar</label></div>
+                        <div class="checkbox-item"><input type="checkbox" id="instStrings" value="strings"><label for="instStrings">🎻 Strings</label></div>
+                        <div class="checkbox-item"><input type="checkbox" id="instBrass" value="brass"><label for="instBrass">🎺 Brass</label></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Panel 3: Backing Vocals -->
+            <div class="panel">
+                <h2>🎶 Backing Vocals (Optional)</h2>
+                <div class="voice-part-grid">
+                    <div class="voice-part" data-part="soprano">
+                        <h4>Treble / Soprano</h4>
+                        <div class="voice-part-actions">
+                            <button class="btn-secondary btn-small" data-role="guide">Play Guide</button>
+                            <button class="btn-secondary btn-small" data-role="rec">Rec</button>
+                            <button class="btn-secondary btn-small" data-role="up">Up</button>
+                        </div>
+                        <div class="checkbox-item"><input type="checkbox" id="guideSoprano"><label for="guideSoprano">Play guide while recording</label></div>
+                        <span class="hint">No take yet</span>
+                    </div>
+                    <div class="voice-part" data-part="alto">
+                        <h4>Alto</h4>
+                        <div class="voice-part-actions">
+                            <button class="btn-secondary btn-small" data-role="guide">Play Guide</button>
+                            <button class="btn-secondary btn-small" data-role="rec">Rec</button>
+                            <button class="btn-secondary btn-small" data-role="up">Up</button>
+                        </div>
+                        <div class="checkbox-item"><input type="checkbox" id="guideAlto"><label for="guideAlto">Play guide while recording</label></div>
+                        <span class="hint">No take yet</span>
+                    </div>
+                    <div class="voice-part" data-part="tenor">
+                        <h4>Tenor</h4>
+                        <div class="voice-part-actions">
+                            <button class="btn-secondary btn-small" data-role="guide">Play Guide</button>
+                            <button class="btn-secondary btn-small" data-role="rec">Rec</button>
+                            <button class="btn-secondary btn-small" data-role="up">Up</button>
+                        </div>
+                        <div class="checkbox-item"><input type="checkbox" id="guideTenor"><label for="guideTenor">Play guide while recording</label></div>
+                        <span class="hint">No take yet</span>
+                    </div>
+                    <div class="voice-part" data-part="bass">
+                        <h4>Bass</h4>
+                        <div class="voice-part-actions">
+                            <button class="btn-secondary btn-small" data-role="guide">Play Guide</button>
+                            <button class="btn-secondary btn-small" data-role="rec">Rec</button>
+                            <button class="btn-secondary btn-small" data-role="up">Up</button>
+                        </div>
+                        <div class="checkbox-item"><input type="checkbox" id="guideBass"><label for="guideBass">Play guide while recording</label></div>
+                        <span class="hint">No take yet</span>
+                    </div>
+                </div>
+                <button class="btn-secondary" style="margin-top: 15px;">▶️ Preview Backing Vocal Mix</button>
+            </div>
+
+            <!-- Panel 4: Mixing & Mastering -->
+            <div class="panel">
+                <h2>🎚️ Mixing & Mastering</h2>
+                <h3>Mixing Profile</h3>
+                <div class="button-group">
+                    <button class="profile-option selected" data-profile="vocal_forward">
+                        <span class="icon">🎤</span> Vocal Forward
+                        <span class="hint">Vocal prominent, band supporting</span>
+                    </button>
+                    <button class="profile-option" data-profile="balanced">
+                        <span class="icon">⚖️</span> Balanced
+                        <span class="hint">Equal vocal & band presence</span>
+                    </button>
+                </div>
+                <h3>Vocal Arrangement</h3>
+                <div class="form-group">
+                    <select id="vocalArrangement">
+                        <option value="single" selected>Single Voice (Lead only)</option>
+                        <option value="full_backup">Full Backup (Harmonies + Doubling)</option>
+                    </select>
+                    <span class="hint">Select the desired vocal arrangement style.</span>
+                </div>
+                <h3>Level Control</h3>
+                <div class="form-group">
+                    <label>Vocal Level (<span id="vocalLevelValue">0 dB</span>)</label>
+                    <input type="range" id="vocalLevel" name="vocal_level" min="-12" max="6" value="0" step="0.1">
+                </div>
+                <div class="form-group">
+                    <label>Music Level (<span id="musicLevelValue">-3 dB</span>)</label>
+                    <input type="range" id="musicLevel" name="music_level" min="-18" max="0" value="-3" step="0.1">
+                </div>
+                <h3>Vocal Enhancement Effects</h3>
+                <div class="vocal-mix-grid">
+                    <div class="form-group">
+                        <label>Vocal Doubling (<span id="doubleValue">0%</span>)</label>
+                        <input type="range" id="vocalDoubleSlider" name="vocal_double" min="0" max="100" value="0">
+                    </div>
+                    <div class="form-group">
+                        <label>Reverb (<span id="reverbValue">30%</span>)</label>
+                        <input type="range" id="vocalReverbSlider" name="vocal_reverb" min="0" max="100" value="30">
+                    </div>
+                    <div class="form-group">
+                        <label>Harmony (<span id="harmonyValue">0%</span>)</label>
+                        <input type="range" id="vocalHarmonySlider" name="vocal_harmony" min="0" max="100" value="0">
+                    </div>
+                    <div class="form-group">
+                        <label>Echo / Delay (<span id="echoValue">0%</span>)</label>
+                        <input type="range" id="vocalEchoSlider" name="vocal_echo" min="0" max="100" value="0">
+                    </div>
+                </div>
+                <h3>Mastering</h3>
+                <div class="checkbox-item">
+                    <input type="checkbox" id="masteringToggle" checked>
+                    <label for="masteringToggle">Apply Professional Mastering (Recommended)</label>
+                </div>
+            </div>
+
+            <!-- Panel 5: Generate & Preview (MOVED TO END) -->
+            <div class="panel generate-panel">
+                <h2>✝️ Generate & Preview</h2>
+                <button class="btn-primary" id="generateBtn" style="width: 100%; padding: 16px; font-size: 1.1rem;">
+                    <span class="spinner" id="spinner" style="display:none;"></span>
+                    <span id="btnText">🎵 Generate Accompaniment</span>
+                </button>
+                <div id="finalAnalysis" class="final-analysis" style="display:none;">
+                    <!-- Analysis content -->
+                </div>
+                <h4 style="margin-top: 15px;">Final Audio</h4>
+                <audio id="finalAudio" class="audio-player" controls style="display:none;"></audio>
+                <div id="downloadSection" style="display:none; margin-top: 15px;">
+                    <a id="downloadBtn" class="btn-primary" href="#" download="ai_song.wav">⬇️ Download WAV</a>
+                </div>
+            </div>
+
+        </div> <!-- Close main-grid -->
+    </div> <!-- Close container -->
+
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        // --- Global State ---
+        let mediaRecorder = null;
+        let recordingChunks = [];
+        let micStream = null;
+        let isRecording = false;
+        let recordedVocalBlob = null;
+        let selectedMixingProfile = "vocal_forward";
+        let masteringEnabled = true;
+        let rehearsalMediaRecorder = null;
+        let rehearsalChunks = [];
+        let rehearsalBandAudio = null;
+        let rehearsalIsRecording = false;
+
+        // --- DOM Elements ---
+        const statusDiv = document.getElementById('status');
+        const recordBtn = document.getElementById('recordBtn');
+        const uploadVocalBtn = document.getElementById('uploadVocalBtn');
+        const vocalFile = document.getElementById('vocalFile');
+        const vocalStatus = document.getElementById('vocalStatus');
+        const vocalPreview = document.getElementById('vocalPreview');
+        const generateBtn = document.getElementById('generateBtn');
+        const btnText = document.getElementById('btnText');
+        const spinner = document.getElementById('spinner');
+        const finalAudio = document.getElementById('finalAudio');
+        const downloadBtn = document.getElementById('downloadBtn');
+        const downloadSection = document.getElementById('downloadSection');
+        const instNone = document.getElementById('instNone');
+        const manualInstrumentSelection = document.getElementById('manualInstrumentSelection');
+        const searchBtn = document.getElementById('searchBtn');
+        const referenceSearch = document.getElementById('referenceSearch');
+        const referenceResults = document.getElementById('referenceResults');
+        const referenceUrlInput = document.getElementById('referenceUrlInput');
+        const uploadRefBtn = document.getElementById('uploadRefBtn');
+        const referenceFile = document.getElementById('referenceFile');
+        const referenceStatus = document.getElementById('referenceStatus');
+        const referencePreview = document.getElementById('referencePreview');
+        const rehearsalRecordBtn = document.getElementById('rehearsalRecordBtn');
+        const rehearsalStopBtn = document.getElementById('rehearsalStopBtn');
+        const rehearsalBtnText = document.getElementById('rehearsalBtnText');
+        const rehearsalPreview = document.getElementById('rehearsalPreview');
+        const rehearsalDownloadBtn = document.getElementById('rehearsalDownloadBtn');
+        const rehearsalStatus = document.getElementById('rehearsalStatus');
+
+        // --- Utility Functions ---
+        function showStatus(message, type = 'info') {
+            statusDiv.textContent = message;
+            statusDiv.className = `status-message show ${type}`;
+        }
+
+        function getSelectedInstruments() {
+            if (instNone.checked) {
+                return []; // AI Producer Mode
+            }
+            const instruments = [];
+            document.querySelectorAll('#manualInstrumentSelection input[type="checkbox"]:checked').forEach(checkbox => {
+                instruments.push(checkbox.value);
+            });
+            return instruments;
+        }
+
+        // --- Vocal Recording Logic ---
+        async function startRecording() {
+            try {
+                micStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                mediaRecorder = new MediaRecorder(micStream);
+                recordingChunks = [];
+
+                mediaRecorder.ondataavailable = event => {
+                    recordingChunks.push(event.data);
+                };
+
+                mediaRecorder.onstop = () => {
+                    const blob = new Blob(recordingChunks, { type: 'audio/wav' });
+                    recordedVocalBlob = blob;
+                    vocalPreview.src = URL.createObjectURL(blob);
+                    vocalPreview.style.display = 'block';
+                    vocalStatus.textContent = `Recorded vocal (${(blob.size / 1024 / 1024).toFixed(2)} MB)`;
+                    recordBtn.textContent = '🎙️ Record Vocal';
+                    isRecording = false;
+                    micStream.getTracks().forEach(track => track.stop());
+                };
+
+                mediaRecorder.start();
+                isRecording = true;
+                recordBtn.textContent = '⏹️ Stop Recording';
+                showStatus('Recording started...', 'info');
+
+            } catch (error) {
+                console.error('Error accessing microphone:', error);
+                showStatus('Error: Could not access microphone. Please check permissions.', 'error');
+            }
+        }
+
+        function stopRecording() {
+            if (mediaRecorder && mediaRecorder.state !== 'inactive') {
+                mediaRecorder.stop();
+            }
+        }
+
+        recordBtn.addEventListener('click', () => {
+            if (isRecording) {
+                stopRecording();
+            } else {
+                startRecording();
+            }
+        });
+
+        uploadVocalBtn.addEventListener('click', () => {
+            vocalFile.click();
+        });
+
+        vocalFile.addEventListener('change', () => {
+            if (vocalFile.files.length > 0) {
+                const file = vocalFile.files[0];
+                recordedVocalBlob = file;
+                vocalPreview.src = URL.createObjectURL(file);
+                vocalPreview.style.display = 'block';
+                vocalStatus.textContent = `Uploaded vocal: ${file.name}`;
+                showStatus('Vocal file uploaded successfully.', 'success');
+            }
+        });
+
+        // --- Rehearsal Recording Logic ---
+        rehearsalRecordBtn.addEventListener('click', async () => {
+            if (rehearsalIsRecording) {
+                // Stop recording
+                rehearsalMediaRecorder.stop();
+                rehearsalBandAudio.pause();
+                rehearsalIsRecording = false;
+                rehearsalRecordBtn.style.display = 'block';
+                rehearsalStopBtn.style.display = 'none';
+                rehearsalBtnText.textContent = '🔴 Record Rehearsal with Band';
+                rehearsalStatus.textContent = 'Recording stopped. Processing audio...';
+                showStatus('Rehearsal recording stopped. Processing audio...', 'info');
+            } else {
+                // Start recording
+                try {
+                    // 1. Generate Band-Only Track (Placeholder for actual generation)
+                    showStatus('Generating band-only track for rehearsal...', 'info');
+                    // In a real app, this would call a backend endpoint to generate the band track
+                    // For now, we use a placeholder audio file
+                    const bandTrackUrl = '/static/placeholder_band.wav'; 
+                    rehearsalBandAudio = new Audio(bandTrackUrl);
+                    rehearsalBandAudio.controls = false;
+
+                    // 2. Get Microphone Stream
+                    micStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                    rehearsalMediaRecorder = new MediaRecorder(micStream);
+                    rehearsalChunks = [];
+
+                    rehearsalMediaRecorder.ondataavailable = event => {
+                        rehearsalChunks.push(event.data);
+                    };
+
+                    rehearsalMediaRecorder.onstop = () => {
+                        const blob = new Blob(rehearsalChunks, { type: 'audio/wav' });
+                        rehearsalPreview.src = URL.createObjectURL(blob);
+                        rehearsalPreview.style.display = 'block';
+                        rehearsalDownloadBtn.style.display = 'inline-block';
+                        rehearsalStatus.textContent = `Rehearsal take recorded (${(blob.size / 1024 / 1024).toFixed(2)} MB)`;
+                        micStream.getTracks().forEach(track => track.stop());
+                        showStatus('Rehearsal take recorded successfully.', 'success');
+                    };
+
+                    // 3. Start Playback and Recording Simultaneously
+                    rehearsalBandAudio.play();
+                    rehearsalMediaRecorder.start();
+                    rehearsalIsRecording = true;
+                    rehearsalRecordBtn.style.display = 'none';
+                    rehearsalStopBtn.style.display = 'block';
+                    rehearsalStatus.textContent = 'Recording... Sing along with the band!';
+                    showStatus('Rehearsal recording started. Sing along!', 'info');
+
+                } catch (error) {
+                    console.error('Error during rehearsal recording:', error);
+                    showStatus('Error: Could not start rehearsal recording.', 'error');
+                }
+            }
+        });
+
+        rehearsalStopBtn.addEventListener('click', () => {
+            if (rehearsalIsRecording) {
+                rehearsalMediaRecorder.stop();
+                rehearsalBandAudio.pause();
+                rehearsalIsRecording = false;
+                rehearsalRecordBtn.style.display = 'block';
+                rehearsalStopBtn.style.display = 'none';
+                rehearsalBtnText.textContent = '🔴 Record Rehearsal with Band';
+                rehearsalStatus.textContent = 'Recording stopped. Processing audio...';
+            }
+        });
+
+        // --- Instrument Selection Logic ---
+        instNone.addEventListener('change', () => {
+            const isChecked = instNone.checked;
+            document.querySelectorAll('#manualInstrumentSelection input[type="checkbox"]').forEach(checkbox => {
+                checkbox.disabled = isChecked;
+                if (isChecked) {
+                    checkbox.checked = false;
+                }
+            });
+            manualInstrumentSelection.style.opacity = isChecked ? '0.5' : '1';
+        });
+
+        // Initialize instrument selection state
+        instNone.dispatchEvent(new Event('change'));
+
+        // --- Deezer Search Logic ---
+        searchBtn.addEventListener('click', async () => {
+            const query = referenceSearch.value.trim();
+            if (!query) {
+                showStatus('Please enter a search term for Deezer.', 'info');
+                return;
+            }
+
+            referenceResults.innerHTML = 'Searching...';
+            try {
+                const response = await fetch(`/search-deezer?query=${encodeURIComponent(query)}`);
+                const data = await response.json();
+
+                if (data.error) {
+                    referenceResults.innerHTML = `Error: ${data.error}`;
+                    showStatus(`Deezer Search Error: ${data.error}`, 'error');
+                    return;
+                }
+
+                if (data.length === 0) {
+                    referenceResults.innerHTML = 'No results found.';
+                    return;
+                }
+
+                let html = 'Found tracks: <br>';
+                data.forEach(track => {
+                    html += `<a href="#" class="select-track" data-url="${track.preview}" data-title="${track.title} - ${track.artist}">${track.title} by ${track.artist}</a><br>`;
+                });
+                referenceResults.innerHTML = html;
+
+            } catch (error) {
+                console.error('Deezer search failed:', error);
+                referenceResults.innerHTML = 'Search failed. Check console for details.';
+                showStatus('Deezer search failed. See console.', 'error');
+            }
+        });
+
+        referenceResults.addEventListener('click', (e) => {
+            if (e.target.classList.contains('select-track')) {
+                e.preventDefault();
+                const url = e.target.dataset.url;
+                const title = e.target.dataset.title;
+
+                referenceUrlInput.value = url;
+                referencePreview.src = url;
+                referencePreview.style.display = 'block';
+                referenceStatus.textContent = `Reference track loaded: ${title}`;
+                referenceResults.innerHTML = '';
+                showStatus(`Reference track "${title}" loaded.`, 'success');
+            }
+        });
+
+        // --- Main Generation Logic ---
+        generateBtn.addEventListener('click', async () => {
+            if (!recordedVocalBlob) {
+                showStatus('Please record or upload a lead vocal first.', 'error');
+                return;
+            }
+
+            // 1. Collect all parameters
+            const formData = new FormData();
+            formData.append('vocal_file', recordedVocalBlob, 'vocal.wav');
+            formData.append('music_style', document.getElementById('musicStyle').value);
+            formData.append('complexity', document.getElementById('complexity').value);
+            formData.append('instruments', JSON.stringify(getSelectedInstruments()));
+            formData.append('mixing_profile', document.querySelector('.profile-option.selected').dataset.profile);
+            formData.append('vocal_arrangement', document.getElementById('vocalArrangement').value);
+            formData.append('vocal_level', document.getElementById('vocalLevel').value);
+            formData.append('music_level', document.getElementById('musicLevel').value);
+            formData.append('vocal_double', document.getElementById('vocalDoubleSlider').value);
+            formData.append('vocal_reverb', document.getElementById('vocalReverbSlider').value);
+            formData.append('vocal_harmony', document.getElementById('vocalHarmonySlider').value);
+            formData.append('vocal_echo', document.getElementById('vocalEchoSlider').value);
+            formData.append('mastering_enabled', document.getElementById('masteringToggle').checked);
+            formData.append('reference_url', referenceUrlInput.value);
+            formData.append('tempo', document.getElementById('metronomeTempo').value);
+
+            // 2. UI Feedback
+            generateBtn.disabled = true;
+            btnText.textContent = 'Generating Accompaniment...';
+            spinner.style.display = 'inline-block';
+            showStatus('Processing vocal and generating accompaniment. This may take a moment...', 'info');
+
+            // 3. Send Request
+            try {
+                const response = await fetch('/generate-with-instruments', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    throw new Error(`Server responded with status ${response.status}: ${errorText}`);
+                }
+
+                const blob = await response.blob();
+                const url = URL.createObjectURL(blob);
+
+                // 4. Success Feedback
+                finalAudio.src = url;
+                finalAudio.style.display = 'block';
+                downloadBtn.href = url;
+                downloadSection.style.display = 'block';
+                showStatus('Accompaniment generated successfully! Playing final mix.', 'success');
+                finalAudio.play();
+
+            } catch (error) {
+                console.error('Generation failed:', error);
+                showStatus(`Generation failed: ${error.message}`, 'error');
+            } finally {
+                generateBtn.disabled = false;
+                btnText.textContent = '🎵 Generate Accompaniment';
+                spinner.style.display = 'none';
+            }
+        });
+
+        // --- Slider and Profile Logic ---
+        document.querySelectorAll('input[type="range"]').forEach(slider => {
+            const updateValue = () => {
+                const valueSpan = document.getElementById(slider.id + 'Value');
+                if (valueSpan) {
+                    let value = slider.value;
+                    if (slider.id === 'vocalLevel' || slider.id === 'musicLevel') {
+                        value += ' dB';
+                    } else {
+                        value += '%';
+                    }
+                    valueSpan.textContent = value;
+                }
+            };
+            slider.addEventListener('input', updateValue);
+            updateValue(); // Initial update
+        });
+
+        document.querySelectorAll('.profile-option').forEach(button => {
+            button.addEventListener('click', () => {
+                document.querySelectorAll('.profile-option').forEach(b => b.classList.remove('selected'));
+                button.classList.add('selected');
+                selectedMixingProfile = button.dataset.profile;
+            });
+        });
+
+        // --- File Upload Logic for Reference Track ---
+        uploadRefBtn.addEventListener('click', () => {
+            referenceFile.click();
+        });
+
+        referenceFile.addEventListener('change', () => {
+            if (referenceFile.files.length > 0) {
+                const file = referenceFile.files[0];
+                referencePreview.src = URL.createObjectURL(file);
+                referencePreview.style.display = 'block';
+                referenceStatus.textContent = `Uploaded reference: ${file.name}`;
+                referenceUrlInput.value = ''; // Clear Deezer URL if file is uploaded
+                showStatus('Reference file uploaded successfully.', 'success');
+            }
+        });
+    });
+    </script>
+</body>
+</html>

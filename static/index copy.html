@@ -1,0 +1,1612 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advanced Vocal Accompaniment AI - Professional Edition</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+            color: #e0e0e0;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container { max-width: 1200px; margin: 0 auto; }
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 30px 0;
+            border-bottom: 2px solid #ff6b35;
+        }
+        .header h1 {
+            font-size: 2.5rem;
+            color: #ff6b35;
+            margin-bottom: 10px;
+            text-shadow: 0 2px 10px rgba(255, 107, 53, 0.3);
+        }
+        .header p {
+            color: #b0b0b0;
+            font-size: 1rem;
+        }
+        .badge {
+            display: inline-block;
+            background: #ff6b35;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            margin-top: 10px;
+        }
+        .main-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+        .panel {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 107, 53, 0.3);
+            border-radius: 12px;
+            padding: 25px;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+        .panel:hover {
+            border-color: #ff6b35;
+            box-shadow: 0 0 20px rgba(255, 107, 53, 0.2);
+        }
+        .panel h2 {
+            color: #ff6b35;
+            margin-bottom: 20px;
+            font-size: 1.3rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .panel h3 {
+            color: #e0e0e0;
+            margin-top: 20px;
+            margin-bottom: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #b0b0b0;
+            font-size: 0.95rem;
+            font-weight: 500;
+        }
+        input[type="file"],
+        input[type="text"],
+        input[type="number"],
+        select {
+            width: 100%;
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 107, 53, 0.2);
+            border-radius: 8px;
+            color: #e0e0e0;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+        }
+        input[type="file"]:focus,
+        input[type="text"]:focus,
+        input[type="number"]:focus,
+        select:focus {
+            outline: none;
+            border-color: #ff6b35;
+            box-shadow: 0 0 10px rgba(255, 107, 53, 0.2);
+        }
+        .checkbox-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px;
+            background: rgba(255, 107, 53, 0.05);
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .checkbox-item:hover {
+            background: rgba(255, 107, 53, 0.15);
+        }
+        input[type="checkbox"] {
+            cursor: pointer;
+            width: 18px;
+            height: 18px;
+            accent-color: #ff6b35;
+        }
+        .slider-container {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+        input[type="range"] {
+            flex: 1;
+            height: 6px;
+            border-radius: 3px;
+            background: rgba(255, 107, 53, 0.2);
+            outline: none;
+            -webkit-appearance: none;
+        }
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: #ff6b35;
+            cursor: pointer;
+            box-shadow: 0 0 10px rgba(255, 107, 53, 0.5);
+        }
+        input[type="range"]::-moz-range-thumb {
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: #ff6b35;
+            cursor: pointer;
+            border: none;
+            box-shadow: 0 0 10px rgba(255, 107, 53, 0.5);
+        }
+        .slider-value {
+            min-width: 50px;
+            text-align: right;
+            color: #ff6b35;
+            font-weight: 600;
+        }
+        .button-group {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-top: 15px;
+        }
+        button {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, #ff6b35, #f7931e);
+            color: white;
+            box-shadow: 0 4px 15px rgba(255, 107, 53, 0.3);
+        }
+        .btn-primary:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 107, 53, 0.4);
+        }
+        .btn-primary:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        .btn-secondary {
+            background: rgba(255, 107, 53, 0.1);
+            color: #ff6b35;
+            border: 1px solid #ff6b35;
+        }
+        .btn-secondary:hover:not(:disabled) {
+            background: rgba(255, 107, 53, 0.2);
+        }
+        .status-message {
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: none;
+            animation: slideIn 0.3s ease;
+        }
+        .status-message.show { display: block; }
+        .status-message.success {
+            background: rgba(76, 175, 80, 0.2);
+            border: 1px solid #4caf50;
+            color: #4caf50;
+        }
+        .status-message.error {
+            background: rgba(244, 67, 54, 0.2);
+            border: 1px solid #f44336;
+            color: #f44336;
+        }
+        .status-message.info {
+            background: rgba(33, 150, 243, 0.2);
+            border: 1px solid #2196f3;
+            color: #2196f3;
+        }
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .spinner {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            border: 2px solid rgba(255, 107, 53, 0.3);
+            border-top-color: #ff6b35;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin-right: 8px;
+        }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        .audio-player {
+            width: 100%;
+            margin-top: 15px;
+        }
+        .hint {
+            color: #888;
+            font-size: 0.9rem;
+            font-style: italic;
+            margin-top: 8px;
+        }
+        .reference-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        .reference-item {
+            background: rgba(255, 107, 53, 0.05);
+            border: 1px solid rgba(255, 107, 53, 0.2);
+            border-radius: 8px;
+            padding: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .reference-item:hover {
+            background: rgba(255, 107, 53, 0.1);
+            border-color: #ff6b35;
+        }
+        .reference-item.selected {
+            background: rgba(255, 107, 53, 0.2);
+            border-color: #ff6b35;
+            box-shadow: 0 0 10px rgba(255, 107, 53, 0.3);
+        }
+        .reference-title {
+            color: #ff6b35;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+        .reference-artist {
+            color: #b0b0b0;
+            font-size: 0.9rem;
+            margin-bottom: 10px;
+        }
+        .reference-duration {
+            color: #888;
+            font-size: 0.85rem;
+        }
+        .mixing-profile-selector {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-top: 10px;
+        }
+        .profile-option {
+            padding: 12px;
+            background: rgba(255, 107, 53, 0.05);
+            border: 2px solid rgba(255, 107, 53, 0.2);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+        .profile-option:hover {
+            border-color: #ff6b35;
+            background: rgba(255, 107, 53, 0.1);
+        }
+        .profile-option.selected {
+            background: rgba(255, 107, 53, 0.3);
+            border-color: #ff6b35;
+        }
+        .profile-name {
+            color: #ff6b35;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+        .profile-desc {
+            color: #888;
+            font-size: 0.85rem;
+        }
+        .mastering-toggle {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
+            background: rgba(255, 107, 53, 0.05);
+            border-radius: 8px;
+            margin-top: 10px;
+        }
+        .toggle-switch {
+            position: relative;
+            width: 40px;
+            height: 24px;
+            background: rgba(255, 107, 53, 0.2);
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .toggle-switch.on {
+            background: #4caf50;
+        }
+        .toggle-switch::after {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background: white;
+            border-radius: 50%;
+            top: 2px;
+            left: 2px;
+            transition: all 0.3s ease;
+        }
+        .toggle-switch.on::after {
+            left: 18px;
+        }
+        .final-analysis {
+            background: rgba(255, 107, 53, 0.05);
+            border: 1px solid rgba(255, 107, 53, 0.2);
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+        .analysis-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+        .analysis-item {
+            text-align: center;
+        }
+        .analysis-label {
+            color: #888;
+            font-size: 0.85rem;
+            margin-bottom: 5px;
+        }
+        .analysis-value {
+            color: #ff6b35;
+            font-size: 1.3rem;
+            font-weight: 600;
+        }
+        @media (max-width: 860px) {
+            .main-grid, .reference-grid {
+                grid-template-columns: 1fr;
+            }
+            .header h1 { font-size: 1.8rem; }
+            .checkbox-grid { grid-template-columns: 1fr; }
+            .mixing-profile-selector { grid-template-columns: 1fr; }
+            .analysis-row { grid-template-columns: 1fr; }
+        }
+
+        .voice-part {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 8px;
+            padding: 10px 12px;
+            margin-bottom: 10px;
+        }
+
+        .voice-part-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 6px;
+            font-size: 0.95rem;
+        }
+
+        .voice-part-actions {
+            display: flex;
+            gap: 6px;
+        }
+
+        .btn-small {
+            padding: 4px 8px;
+            font-size: 0.8rem;
+        }
+
+</style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎵 Advanced Vocal Accompaniment AI</h1>
+            <p>Studio-quality band backing plus intelligent vocal enhancement</p>
+            <div class="badge">✨ AI PRODUCER • REFERENCE ANALYSIS</div>
+        </div>
+
+        <div class="status-message" id="statusMessage"></div>
+
+        <div class="main-grid">
+            <!-- LEFT PANEL: VOCAL & MIX -->
+            <div class="panel">
+                <h2>🎤 Vocal & Mix</h2>
+                
+                <div class="form-group">
+                    <label>1. Provide Your Vocal</label>
+                    <div class="button-group">
+                        <button class="btn-secondary" id="recordBtn">🎙️ Record with Mic</button>
+                        <button class="btn-secondary" id="uploadVocalBtn">📁 Upload File</button>
+                    </div>
+                    <input type="file" id="vocalFile" accept="audio/*" style="display:none;">
+                    <div id="vocalStatus" class="hint"></div>
+                </div>
+
+                <div class="form-group">
+                    <audio id="vocalPreview" class="audio-player" controls style="display:none;"></audio>
+                </div>
+
+            <h3 style="margin-top: 25px;">🎶 Backing Vocals (Optional)</h3>
+                <div class="form-group" id="backingVocalsSection">
+                    <div class="voice-part" data-part="treble">
+                <div class="voice-part-header">
+                         <span>Treble / Soprano</span>
+                    <div class="voice-part-actions">
+                        <button class="btn-secondary btn-small" data-role="playguide" onclick="playGuideForBacking('treble')">▶️ Play Guide</button>
+                        <button class="btn-secondary btn-small" data-role="record">🎙️ Record</button>
+                        <button class="btn-secondary btn-small" data-role="upload">📁 Upload</button>
+                    </div>
+                </div>
+                        <div class="hint" data-role="status">No take yet</div>
+                        <audio controls class="audio-player" data-role="preview" style="display:none;"></audio>
+                    </div>
+
+                    <div class="voice-part" data-part="alto">
+                       <div class="voice-part-header">
+                            <span>Auto</span>
+                            <div class="voice-part-actions">
+                                <button class="btn-secondary btn-small" data-role="playguide" onclick="playGuideForBacking('treble')">▶️ Play Guide</button>
+                                <button class="btn-secondary btn-small" data-role="record">🎙️ Record</button>
+                                <button class="btn-secondary btn-small" data-role="upload">📁 Upload</button>
+                            </div>
+                        </div>
+                        <div class="hint" data-role="status">No take yet</div>
+                        <audio controls class="audio-player" data-role="preview" style="display:none;"></audio>
+                    </div>
+
+                    <div class="voice-part" data-part="tenor">
+                        <div class="voice-part-header">
+                            <span>Tenor</span>
+                            <div class="voice-part-actions">
+                                <button class="btn-secondary btn-small" data-role="playguide" onclick="playGuideForBacking('treble')">▶️ Play Guide</button>
+                                <button class="btn-secondary btn-small" data-role="record">🎙️ Record</button>
+                                <button class="btn-secondary btn-small" data-role="upload">📁 Upload</button>
+                            </div>
+                        </div>
+                    <div class="hint" data-role="status">No take yet</div>
+                        <audio controls class="audio-player" data-role="preview" style="display:none;"></audio>
+                    </div>
+
+                    <div class="voice-part" data-part="bass">
+                        <div class="voice-part-header">
+                            <span>Bass</span>
+                            <div class="voice-part-actions">
+                                <button class="btn-secondary btn-small" data-role="playguide" onclick="playGuideForBacking('treble')">▶️ Play Guide</button>
+                                <button class="btn-secondary btn-small" data-role="record">🎙️ Record</button>
+                                <button class="btn-secondary btn-small" data-role="upload">📁 Upload</button>
+                            </div>
+                        </div>
+                        <div class="hint" data-role="status">No take yet</div>
+                        <audio controls class="audio-player" data-role="preview" style="display:none;"></audio>
+                    </div>
+                </div>
+
+                <button class="btn-secondary" id="previewBackingMixBtn" style="margin-top:10px;">
+                    ▶️ Preview Backing Vocal Mix
+                </button>
+                <div class="hint">These backing parts will be mixed into your final accompaniment.</div>
+
+                <h3>Mixing Profile</h3>
+                <div class="mixing-profile-selector">
+                    <div class="profile-option selected" data-profile="vocal_forward">
+                        <div class="profile-name">🎤 Vocal Forward</div>
+                        <div class="profile-desc">Vocal prominent, band supporting</div>
+                    </div>
+                    <div class="profile-option" data-profile="balanced">
+                        <div class="profile-name">⚖️ Balanced</div>
+                        <div class="profile-desc">Equal vocal & band presence</div>
+                    </div>
+                </div>
+
+                <h3>🎶 Vocal Enhancement Effects</h3>
+
+                    <div class="enhancement-slider" style="margin: 15px 0; padding: 12px; background: rgba(255, 107, 53, 0.05); border-radius: 8px; border: 1px solid rgba(255, 107, 53, 0.2);">
+                        <div class="enhancement-label" style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                            <span style="color: #e0e0e0;">Reverb</span>
+                            <span id="reverbValue" style="color: #ff6b35;">30%</span>
+                        </div>
+                        <input type="range" id="vocalReverbSlider" min="0" max="100" value="30" style="width: 100%; height: 6px; border-radius: 3px; background: rgba(255, 107, 53, 0.2);">
+                    </div>
+
+                    <div class="enhancement-slider" style="margin: 15px 0; padding: 12px; background: rgba(255, 107, 53, 0.05); border-radius: 8px; border: 1px solid rgba(255, 107, 53, 0.2);">
+                        <div class="enhancement-label" style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                            <span style="color: #e0e0e0;">Vocal Doubling</span>
+                            <span id="doubleValue" style="color: #ff6b35;">0%</span>
+                        </div>
+                        <input type="range" id="vocalDoubleSlider" min="0" max="100" value="0" style="width: 100%; height: 6px; border-radius: 3px; background: rgba(255, 107, 53, 0.2);">
+                    </div>
+
+                    <div class="enhancement-slider" style="margin: 15px 0; padding: 12px; background: rgba(255, 107, 53, 0.05); border-radius: 8px; border: 1px solid rgba(255, 107, 53, 0.2);">
+                        <div class="enhancement-label" style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                            <span style="color: #e0e0e0;">Echo/Delay</span>
+                            <span id="echoValue" style="color: #ff6b35;">0%</span>
+                        </div>
+                        <input type="range" id="vocalEchoSlider" min="0" max="100" value="0" style="width: 100%; height: 6px; border-radius: 3px; background: rgba(255, 107, 53, 0.2);">
+                    </div>
+
+                    <div class="enhancement-slider" style="margin: 15px 0; padding: 12px; background: rgba(255, 107, 53, 0.05); border-radius: 8px; border: 1px solid rgba(255, 107, 53, 0.2);">
+                        <div class="enhancement-label" style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                            <span style="color: #e0e0e0;">Harmony</span>
+                            <span id="harmonyValue" style="color: #ff6b35;">0%</span>
+                        </div>
+                        <input type="range" id="vocalHarmonySlider" min="0" max="100" value="0" style="width: 100%; height: 6px; border-radius: 3px; background: rgba(255, 107, 53, 0.2);">
+                    </div>
+
+                <h3>Level Control</h3>
+                <div class="form-group">
+                    <label>Vocal Level</label>
+                    <div class="slider-container">
+                        <input type="range" id="vocalLevel" min="-12" max="12" value="0" step="0.5">
+                        <span class="slider-value" id="vocalLevelValue">0 dB</span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Music Level</label>
+                    <div class="slider-container">
+                        <input type="range" id="musicLevel" min="-12" max="0" value="-6" step="0.5">
+                        <span class="slider-value" id="musicLevelValue">-6 dB</span>
+                    </div>
+                </div>
+
+                <h3>Mastering</h3>
+                <div class="mastering-toggle">
+                    <div class="toggle-switch on" id="masteringToggle"></div>
+                    <span>Apply Professional Mastering</span>
+                </div>
+                <div class="hint">Expert recommendation: Always ON for best results</div>
+            </div>
+
+            <!-- RIGHT PANEL: BAND & STYLE -->
+            <div class="panel">
+                <h2>🎸 Band & Style</h2>
+
+                <h3>Reference Track (Optional)</h3>
+                <div class="form-group">
+                    <label>Search Deezer</label>
+                    <div style="display: flex; gap: 10px;">
+                        <input type="text" id="referenceSearch" placeholder="e.g., 'Michael Bublé Feliz Navidad'">
+                        <button class="btn-secondary" id="searchBtn" style="flex: 0 0 auto; width: auto;">Search</button>
+                    </div>
+                </div>
+
+                <div id="referenceResults" style="max-height: 200px; overflow-y: auto; margin-bottom: 15px;"></div>
+
+                <audio id="referencePreview" class="audio-player" controls style="display:none;"></audio>
+
+
+                <div class="form-group">
+                    <label>Or Upload Your Own Reference</label>
+                    <button class="btn-secondary" id="uploadRefBtn">📁 Upload Reference</button>
+                    <input type="file" id="referenceFile" accept="audio/*" style="display:none;">
+                    <div id="referenceStatus" class="hint"></div>
+                </div>
+
+                <h3>Music Style</h3>
+                <div class="form-group">
+                    <select id="musicStyle">
+                        <option value="pop">Pop</option>
+                        <option value="rock">Rock</option>
+                        <option value="r&b">R&B / Soul</option>
+                        <option value="jazz">Jazz</option>
+                        <option value="gospel">Gospel</option>
+                        <option value="afrobeat">Afrobeat</option>
+                        <option value="reggae">Reggae</option>
+                        <option value="ballad">Ballad</option>
+                        <option value="electronic">Electronic</option>
+                    </select>
+                </div>
+
+                <h3>Arrangement Complexity</h3>
+                <div class="form-group">
+                    <select id="complexity">
+                        <option value="simple">Simple (Minimal instruments)</option>
+                        <option value="medium" selected>Medium (Balanced)</option>
+                        <option value="complex">Complex (Full arrangement)</option>
+                    </select>
+                </div>
+
+                <h3>Band Instruments</h3>
+                <div class="checkbox-grid">
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="instDrums" checked>
+                        <label for="instDrums" style="margin: 0;">🥁 Drums</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="instBass" checked>
+                        <label for="instBass" style="margin: 0;">🎸 Bass</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="instPiano" checked>
+                        <label for="instPiano" style="margin: 0;">🎹 Piano</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="instGuitar">
+                        <label for="instGuitar" style="margin: 0;">🎸 Guitar</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="instStrings">
+                        <label for="instStrings" style="margin: 0;">🎻 Strings</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="instBrass">
+                        <label for="instBrass" style="margin: 0;">🎺 Brass</label>
+                    </div>
+                </div>
+                <div class="hint">Leave unchecked for AI to choose the best arrangement</div>
+            </div>
+        </div>
+
+        <!-- GENERATION SECTION -->
+        <div class="panel">
+            <h2>🎚️ Generate & Preview</h2>
+            <button class="btn-primary" id="generateBtn" style="width: 100%; padding: 16px; font-size: 1.1rem;">
+                <span class="spinner" id="spinner" style="display:none;"></span>
+                <span id="btnText">🎵 Generate Accompaniment</span>
+            </button>
+
+            <div id="finalAnalysis" class="final-analysis" style="display:none;">
+                <h3 style="margin-top: 0;">Final Mix Analysis</h3>
+                <div class="analysis-row">
+                    <div class="analysis-item">
+                        <div class="analysis-label">Detected Key</div>
+                        <div class="analysis-value" id="analysisKey">-</div>
+                    </div>
+                    <div class="analysis-item">
+                        <div class="analysis-label">Tempo</div>
+                        <div class="analysis-value" id="analysisTempo">-</div>
+                    </div>
+                    <div class="analysis-item">
+                        <div class="analysis-label">Loudness</div>
+                        <div class="analysis-value" id="analysisLoudness">-</div>
+                    </div>
+                </div>
+            </div>
+
+            <h3 style="margin-top: 30px;">Final Mix</h3>
+            <audio id="finalAudio" class="audio-player" controls style="display:none;"></audio>
+            <div id="downloadSection" style="display:none; margin-top: 15px;">
+                <a id="downloadBtn" class="btn-primary" href="#" download="ai_song.wav" style="display: inline-block; text-decoration: none; text-align: center;">⬇️ Download WAV</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+
+    // ===== STATE MANAGEMENT =====
+    let recordedVocalBlob = null;
+    let selectedReferenceUrl = null;
+    let selectedMixingProfile = 'vocal_forward';
+    let masteringEnabled = true;
+
+    // ===== UI ELEMENTS =====
+    const vocalFile = document.getElementById('vocalFile');
+    const recordBtn = document.getElementById('recordBtn');
+    const uploadVocalBtn = document.getElementById('uploadVocalBtn');
+    const vocalPreview = document.getElementById('vocalPreview');
+    const vocalStatus = document.getElementById('vocalStatus');
+    const generateBtn = document.getElementById('generateBtn');
+    const spinner = document.getElementById('spinner');
+    const btnText = document.getElementById('btnText');
+    const statusMessage = document.getElementById('statusMessage');
+    const referenceSearch = document.getElementById('referenceSearch');
+    const searchBtn = document.getElementById('searchBtn');
+    const referenceResults = document.getElementById('referenceResults');
+    const uploadRefBtn = document.getElementById('uploadRefBtn');
+    const referenceFile = document.getElementById('referenceFile');
+    const referenceStatus = document.getElementById('referenceStatus');
+    const referencePreview = document.getElementById('referencePreview');
+    const vocalLevel = document.getElementById('vocalLevel');
+    const vocalLevelValue = document.getElementById('vocalLevelValue');
+    const musicLevel = document.getElementById('musicLevel');
+    const musicLevelValue = document.getElementById('musicLevelValue');
+    const finalAudio = document.getElementById('finalAudio');
+    const downloadBtn = document.getElementById('downloadBtn');
+    const downloadSection = document.getElementById('downloadSection');
+    const finalAnalysis = document.getElementById('finalAnalysis');
+    const masteringToggle = document.getElementById('masteringToggle');
+
+
+    // ===== BACKING VOCALS STATE =====
+    const backingParts = ["treble", "alto", "tenor", "bass"];
+    const backingState = {};
+
+    // each part will store { blob, file, audioEl, statusEl }
+    backingParts.forEach(part => {
+        const container = document.querySelector(`.voice-part[data-part="${part}"]`);
+        backingState[part] = {
+            blob: null,
+            file: null,
+            audioEl: container.querySelector('[data-role="preview"]'),
+            statusEl: container.querySelector('[data-role="status"]'),
+        };
+    });
+
+    const previewBackingMixBtn = document.getElementById("previewBackingMixBtn");
+
+    // Share mic + recorder with main vocal
+    let backingMediaRecorder = null;
+    let backingRecordingChunks = [];
+    let backingMicStream = null;
+    let activeBackingPart = null;
+    let backingIsRecording = false;
+
+
+
+    // ===== UTILITY FUNCTIONS =====
+    function showStatus(message, type = 'info') {
+        statusMessage.textContent = message;
+        statusMessage.className = `status-message show ${type}`;
+        setTimeout(() => statusMessage.classList.remove('show'), 5000);
+    }
+
+    function setLoading(isLoading) {
+        generateBtn.disabled = isLoading;
+        spinner.style.display = isLoading ? 'inline-block' : 'none';
+        btnText.textContent = isLoading ? 'Processing...' : '🎵 Generate Accompaniment';
+    }
+
+    // Ensure only one audio element plays at a time
+    const audioPlayers = [vocalPreview, referencePreview, finalAudio];
+    audioPlayers.forEach(player => {
+        player.addEventListener('play', () => {
+            audioPlayers.forEach(other => {
+                if (other !== player) {
+                    other.pause();
+                }
+            });
+        });
+    });
+
+
+    // ===== VOCAL ENHANCEMENT SLIDERS =====
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize enhancement sliders
+            const sliders = {
+                'vocalReverbSlider': 'reverbValue',
+                'vocalDoubleSlider': 'doubleValue',
+                'vocalEchoSlider': 'echoValue',
+                'vocalHarmonySlider': 'harmonyValue'
+            };
+            
+            Object.keys(sliders).forEach(sliderId => {
+                const slider = document.getElementById(sliderId);
+                const valueSpan = document.getElementById(sliders[sliderId]);
+                
+                if (slider && valueSpan) {
+                    // Initial value
+                    valueSpan.textContent = `${slider.value}%`;
+                    
+                    // Update on change
+                    slider.addEventListener('input', (e) => {
+                        valueSpan.textContent = `${e.target.value}%`;
+                    });
+                }
+            });
+        });
+
+        // ===== IMPROVED VOCAL RECORDING (FIXES DISTORTION) =====
+        let mediaRecorder = null;
+        let recordingChunks = [];
+        let micStream = null;
+        let isRecording = false;
+
+        recordBtn.addEventListener('click', async () => {
+            // If already recording, stop
+            if (isRecording) {
+                if (mediaRecorder && mediaRecorder.state === "recording") {
+                    mediaRecorder.stop();
+                }
+                isRecording = false;
+                recordBtn.textContent = "🎙️ Record with Mic";
+                recordBtn.style.background = "";
+                return;
+            }
+
+            try {
+                // Use high-quality audio settings
+                const constraints = {
+                    audio: {
+                        channelCount: 1,  // Mono is better for vocals
+                        sampleRate: 44100,  // CD quality
+                        sampleSize: 16,
+                        echoCancellation: true,
+                        noiseSuppression: true,
+                        autoGainControl: true
+                    }
+                };
+
+                micStream = await navigator.mediaDevices.getUserMedia(constraints);
+
+                // Use the best available MIME type
+                let mimeType = 'audio/webm';
+                if (MediaRecorder.isTypeSupported('audio/webm;codecs=opus')) {
+                    mimeType = 'audio/webm;codecs=opus';
+                } else if (MediaRecorder.isTypeSupported('audio/mp4')) {
+                    mimeType = 'audio/mp4';
+                }
+
+                recordingChunks = [];
+                mediaRecorder = new MediaRecorder(micStream, {
+                    mimeType: mimeType,
+                    audioBitsPerSecond: 128000  // 128 kbps for good quality
+                });
+
+                mediaRecorder.ondataavailable = (event) => {
+                    if (event.data.size > 0) {
+                        recordingChunks.push(event.data);
+                    }
+                };
+
+                mediaRecorder.onstop = async () => {
+                    try {
+                        // Convert to WAV format for better quality and compatibility
+                        const webmBlob = new Blob(recordingChunks, { type: mimeType });
+                        
+                        // Convert to WAV
+                        const wavBlob = await convertToWav(webmBlob);
+                        recordedVocalBlob = wavBlob;
+                        
+                        // Set up audio player
+                        vocalPreview.src = URL.createObjectURL(wavBlob);
+                        vocalPreview.style.display = "block";
+                        vocalStatus.textContent = "✓ Recording saved (High quality)";
+                        vocalStatus.style.color = "#4caf50";
+                        
+                    } catch (error) {
+                        console.error("Conversion error:", error);
+                        // Fallback to original format
+                        recordedVocalBlob = new Blob(recordingChunks, { type: mimeType });
+                        vocalPreview.src = URL.createObjectURL(recordedVocalBlob);
+                        vocalPreview.style.display = "block";
+                        vocalStatus.textContent = "✓ Recording saved";
+                    }
+                    
+                    // Clean up
+                    if (micStream) {
+                        micStream.getTracks().forEach(t => t.stop());
+                        micStream = null;
+                    }
+                };
+
+                mediaRecorder.start();
+                isRecording = true;
+                recordBtn.textContent = "⏹️ Stop Recording";
+                recordBtn.style.background = "#f44336";
+                vocalStatus.textContent = "Recording... (High quality)";
+                vocalStatus.style.color = "#ff9800";
+
+            } catch (error) {
+                console.error(error);
+                if (error.name === "NotAllowedError" || error.name === "SecurityError") {
+                    showStatus("Microphone permission denied.", "error");
+                    showMicUnblockInstructions();
+                } else {
+                    showStatus("Unable to access microphone.", "error");
+                }
+            }
+        });
+
+    // Helper function to convert recorded audio to WAV format
+    async function convertToWav(audioBlob) {
+        const arrayBuffer = await audioBlob.arrayBuffer();
+        
+        // Create audio context
+        const audioContext = new (window.AudioContext || window.webkitAudioContext)({
+            sampleRate: 44100
+        });
+        
+        // Decode audio data
+        const audioBuffer = await audioContext.decodeAudioData(arrayBuffer);
+        
+        // Convert to mono if stereo (reduces file size and issues)
+        let channels = [];
+        if (audioBuffer.numberOfChannels > 1) {
+            // Mix down to mono
+            const leftChannel = audioBuffer.getChannelData(0);
+            const rightChannel = audioBuffer.getChannelData(1);
+            const monoData = new Float32Array(audioBuffer.length);
+            
+            for (let i = 0; i < audioBuffer.length; i++) {
+                monoData[i] = (leftChannel[i] + rightChannel[i]) / 2;
+            }
+            channels = [monoData];
+        } else {
+            channels = [audioBuffer.getChannelData(0)];
+        }
+        
+        // Create WAV file
+        return audioBufferToWav(channels, audioBuffer.length, audioBuffer.sampleRate);
+    }
+
+    function audioBufferToWav(channels, length, sampleRate) {
+        const WAVE_HEADER_SIZE = 44;
+        const buffer = new ArrayBuffer(WAVE_HEADER_SIZE + length * 2);
+        const view = new DataView(buffer);
+        
+        // Write WAV header
+        writeString(view, 0, 'RIFF');
+        view.setUint32(4, 36 + length * 2, true);
+        writeString(view, 8, 'WAVE');
+        writeString(view, 12, 'fmt ');
+        view.setUint32(16, 16, true);
+        view.setUint16(20, 1, true); // PCM format
+        view.setUint16(22, channels.length, true);
+        view.setUint32(24, sampleRate, true);
+        view.setUint32(28, sampleRate * channels.length * 2, true);
+        view.setUint16(32, channels.length * 2, true);
+        view.setUint16(34, 16, true);
+        writeString(view, 36, 'data');
+        view.setUint32(40, length * 2, true);
+        
+        // Write PCM data
+        let offset = 44;
+        for (let i = 0; i < length; i++) {
+            for (let channel = 0; channel < channels.length; channel++) {
+                const sample = Math.max(-1, Math.min(1, channels[channel][i]));
+                view.setInt16(offset, sample < 0 ? sample * 0x8000 : sample * 0x7FFF, true);
+                offset += 2;
+            }
+        }
+        
+        return new Blob([buffer], { type: 'audio/wav' });
+    }
+
+    function writeString(view, offset, string) {
+        for (let i = 0; i < string.length; i++) {
+            view.setUint8(offset + i, string.charCodeAt(i));
+        }
+    }
+
+    // ===== IMPROVED GENERATION FUNCTION =====
+generateBtn.addEventListener('click', async () => {
+    const uploadedVocalFile = document.getElementById('vocalFile').files[0];
+    if (!uploadedVocalFile && !recordedVocalBlob) {
+        showStatus('Please provide a vocal by uploading or recording.', 'error');
+        return;
+    }
+
+    setLoading(true);
+    const formData = new FormData();
+
+    // Add vocal file
+    if (recordedVocalBlob) {
+        formData.append('vocal', recordedVocalBlob, 'vocal.wav');
+    } else if (uploadedVocalFile) {
+        formData.append('vocal', uploadedVocalFile);
+    }
+
+    // Add enhancement values as percentages (0-1)
+    const reverbValue = parseInt(document.getElementById('vocalReverbSlider')?.value || '30');
+    const doubleValue = parseInt(document.getElementById('vocalDoubleSlider')?.value || '0');
+    const echoValue = parseInt(document.getElementById('vocalEchoSlider')?.value || '0');
+    const harmonyValue = parseInt(document.getElementById('vocalHarmonySlider')?.value || '0');
+    
+    formData.append('vocal_reverb', (reverbValue / 100).toFixed(2));
+    formData.append('vocal_double', (doubleValue / 100).toFixed(2));
+    formData.append('vocal_echo', (echoValue / 100).toFixed(2));
+    formData.append('vocal_harmony', (harmonyValue / 100).toFixed(2));
+
+    // Add other form data
+    const selectedInstruments = [
+        'drums', 'bass', 'piano', 'guitar', 'strings', 'brass'
+    ].filter(inst => document.getElementById(`inst${inst.charAt(0).toUpperCase() + inst.slice(1)}`).checked);
+
+    formData.append('selected_instruments', selectedInstruments.join(','));
+    formData.append('style', document.getElementById('musicStyle').value);
+    formData.append('complexity', document.getElementById('complexity').value);
+    formData.append('mixing_profile', selectedMixingProfile);
+    formData.append('vocal_level', vocalLevel.value);
+    formData.append('music_level', musicLevel.value);
+    formData.append('apply_mastering', masteringEnabled);
+
+    try {
+        showStatus('Generating accompaniment... This may take a moment.', 'info');
+        
+        const response = await fetch('/generate-with-instruments', {
+            method: 'POST',
+            body: formData
+        });
+
+        if (!response.ok) {
+            const errorText = await response.text();
+            console.error('Server error:', errorText);
+            throw new Error(`Generation failed: ${response.status}`);
+        }
+
+        // Check if response is JSON (contains analysis) or direct audio
+        const contentType = response.headers.get('content-type');
+        
+        if (contentType && contentType.includes('application/json')) {
+            // JSON response with analysis data
+            const data = await response.json();
+            
+            if (data.status === 'success') {
+                // Display analysis
+                document.getElementById('analysisKey').textContent = data.analysis?.key || 'C';
+                document.getElementById('analysisTempo').textContent = `${data.analysis?.tempo || 120} BPM`;
+                document.getElementById('analysisLoudness').textContent = data.analysis?.loudness || '-12 dB';
+                
+                // Decode base64 audio if present
+                if (data.audio_base64) {
+                    const audioBytes = Uint8Array.from(atob(data.audio_base64), c => c.charCodeAt(0));
+                    const audioBlob = new Blob([audioBytes], { type: 'audio/wav' });
+                    const audioUrl = URL.createObjectURL(audioBlob);
+                    
+                    setupAudioPlayer(audioUrl, audioBlob);
+                    showStatus('✅ Generation complete! Analysis displayed below.', 'success');
+                } else if (data.audio_url) {
+                    // Direct URL
+                    setupAudioPlayer(data.audio_url);
+                    showStatus('✅ Generation complete! Analysis displayed below.', 'success');
+                }
+            } else {
+                throw new Error(data.message || 'Generation failed');
+            }
+        } else {
+            // Direct audio file response
+            const blob = await response.blob();
+            
+            // Check if it's actually audio
+            if (blob.type.includes('audio') || blob.type.includes('octet-stream')) {
+                const audioUrl = URL.createObjectURL(blob);
+                setupAudioPlayer(audioUrl, blob);
+                
+                // Show dummy analysis as fallback
+                document.getElementById('analysisKey').textContent = 'C';
+                document.getElementById('analysisTempo').textContent = '120 BPM';
+                document.getElementById('analysisLoudness').textContent = '-12 dB';
+                
+                showStatus('✅ Generation complete!', 'success');
+            } else {
+                // Might be error message
+                const text = await blob.text();
+                throw new Error(text || 'Invalid response format');
+            }
+        }
+
+    } catch (error) {
+        console.error('Generation error:', error);
+        showStatus(`Error: ${error.message}`, 'error');
+    } finally {
+        setLoading(false);
+    }
+});
+
+// Helper function to set up audio player
+function setupAudioPlayer(audioUrl, audioBlob = null) {
+    // Set audio source
+    finalAudio.src = audioUrl;
+    finalAudio.style.display = 'block';
+    
+    // Set up download
+    if (audioBlob) {
+        downloadBtn.href = audioUrl;
+        downloadBtn.download = `ai_accompaniment_${Date.now()}.wav`;
+    } else {
+        downloadBtn.href = audioUrl;
+        downloadBtn.download = 'ai_accompaniment.wav';
+    }
+    
+    // Show sections
+    downloadSection.style.display = 'block';
+    finalAnalysis.style.display = 'block';
+    
+    // Try to auto-play
+    finalAudio.play().catch(error => {
+        console.log('Auto-play prevented, user needs to click play:', error);
+        showStatus('Click the play button to listen to your mix', 'info');
+    });
+    
+    // Clean up URL when audio is done
+    finalAudio.onended = function() {
+        setTimeout(() => {
+            URL.revokeObjectURL(audioUrl);
+        }, 1000);
+    };
+}
+
+// Also add audio error handling
+finalAudio.addEventListener('error', function(e) {
+    console.error('Audio playback error:', e);
+    showStatus('Audio playback failed. Try downloading the file instead.', 'error');
+});
+
+
+// Test if audio can play before generation
+function testAudioPlayback(audioUrl) {
+    return new Promise((resolve, reject) => {
+        const testAudio = new Audio();
+        testAudio.src = audioUrl;
+        testAudio.volume = 0.1; // Low volume for test
+        
+        testAudio.oncanplaythrough = () => {
+            testAudio.play().then(() => {
+                testAudio.pause();
+                resolve(true);
+            }).catch(error => {
+                reject(new Error('Audio playback blocked by browser'));
+            });
+        };
+        
+        testAudio.onerror = () => {
+            reject(new Error('Invalid audio format'));
+        };
+        
+        setTimeout(() => {
+            reject(new Error('Audio loading timeout'));
+        }, 5000);
+    });
+}
+
+
+    // ===== MAIN VOCAL GUIDE FOR BACKING VOCALS =====
+    let guideAudio = null;
+    let isGuidePlaying = false;
+
+    // Function to play main vocal as guide
+    function playGuideForBacking(part) {
+        // Stop any existing guide
+        if (isGuidePlaying && guideAudio) {
+            guideAudio.pause();
+            isGuidePlaying = false;
+            updateGuideButton(part, false);
+            return;
+        }
+        
+        // Check if main vocal exists
+        if (!vocalPreview.src) {
+            showStatus("Record or upload a main vocal first to use as guide", "info");
+            return;
+        }
+        
+        // Create or reuse guide audio
+        if (!guideAudio) {
+            guideAudio = new Audio(vocalPreview.src);
+            guideAudio.volume = 0.5; // Lower volume for guide
+            guideAudio.loop = true; // Loop for continuous guide
+            
+            guideAudio.onended = () => {
+                isGuidePlaying = false;
+                updateGuideButton(part, false);
+            };
+        }
+        
+        // Play guide
+        guideAudio.currentTime = 0;
+        guideAudio.play().then(() => {
+            isGuidePlaying = true;
+            updateGuideButton(part, true);
+            showStatus("Main vocal guide playing...", "info");
+        }).catch(error => {
+            console.error("Guide playback failed:", error);
+            showStatus("Could not play guide. Check if main vocal is loaded.", "error");
+        });
+    }
+
+    function updateGuideButton(part, isPlaying) {
+        const guideBtn = document.querySelector(`.voice-part[data-part="${part}"] [data-role="playguide"]`);
+        if (guideBtn) {
+            guideBtn.textContent = isPlaying ? "⏸️ Stop Guide" : "▶️ Play Guide";
+            guideBtn.style.background = isPlaying ? "#4caf50" : "";
+        }
+    }
+
+    // Stop guide when recording starts
+    function stopGuideIfPlaying() {
+        if (isGuidePlaying && guideAudio) {
+            guideAudio.pause();
+            guideAudio.currentTime = 0;
+            isGuidePlaying = false;
+            
+            // Update all guide buttons
+            document.querySelectorAll('[data-role="playguide"]').forEach(btn => {
+                btn.textContent = "▶️ Play Guide";
+                btn.style.background = "";
+            });
+        }
+    }
+
+
+
+// Start recording helper
+function startRecordingStream(stream) {
+    recordingChunks = [];
+    mediaRecorder = new MediaRecorder(stream);
+
+    mediaRecorder.ondataavailable = e => recordingChunks.push(e.data);
+
+    mediaRecorder.onstop = () => {
+        recordedVocalBlob = new Blob(recordingChunks, { type: "audio/webm" });
+        vocalPreview.src = URL.createObjectURL(recordedVocalBlob);
+        vocalPreview.style.display = "block";
+        vocalStatus.textContent = "✓ Recording saved";
+
+        stream.getTracks().forEach(t => t.stop());
+    };
+
+    mediaRecorder.start();
+    isRecording = true;
+    recordBtn.textContent = "⏹️ Stop Recording";
+    vocalStatus.textContent = "Recording…";
+};
+
+    // ===== VOCAL FILE UPLOAD =====
+    uploadVocalBtn.addEventListener('click', () => vocalFile.click());
+    vocalFile.addEventListener('change', (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            const url = URL.createObjectURL(file);
+            vocalPreview.src = url;
+            vocalPreview.style.display = 'block';
+            vocalStatus.textContent = `✓ ${file.name}`;
+            recordedVocalBlob = null; // explicit: using uploaded file, not recording
+        }
+    });
+
+    // ===== VOCAL BACKING RECORD =====
+
+        async function startBackingRecording(part) {
+        // Stop guide if playing
+        stopGuideIfPlaying();
+        
+        if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+            showStatus("Your browser does not support microphone recording.", "error");
+            return;
+        }
+        try {
+            backingMicStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+
+            backingRecordingChunks = [];
+            backingMediaRecorder = new MediaRecorder(backingMicStream);
+
+            backingMediaRecorder.ondataavailable = (e) => {
+                if (e.data && e.data.size > 0) {
+                    backingRecordingChunks.push(e.data);
+                }
+            };
+
+            backingMediaRecorder.onstop = () => {
+                const partState = backingState[part];
+                partState.blob = new Blob(backingRecordingChunks, { type: "audio/webm" });
+                partState.file = null; // prefer recorded over uploaded
+                const url = URL.createObjectURL(partState.blob);
+                partState.audioEl.src = url;
+                partState.audioEl.style.display = "block";
+                partState.statusEl.textContent = "✓ Recorded take";
+
+                if (backingMicStream) {
+                    backingMicStream.getTracks().forEach(t => t.stop());
+                    backingMicStream = null;
+                }
+            };
+
+            backingMediaRecorder.start();
+            backingIsRecording = true;
+            activeBackingPart = part;
+            backingState[part].statusEl.textContent = "Recording...";
+        } catch (error) {
+            console.error(error);
+            if (error.name === "NotAllowedError" || error.name === "SecurityError") {
+                showStatus("Microphone permission denied. Enable it in your browser settings.", "error");
+                showMicUnblockInstructions && showMicUnblockInstructions();
+            } else {
+                showStatus("Could not start backing vocal recording.", "error");
+            }
+        }
+    }
+
+    function stopBackingRecording() {
+        if (backingMediaRecorder && backingMediaRecorder.state === "recording") {
+            backingMediaRecorder.stop();
+        }
+        backingIsRecording = false;
+        activeBackingPart = null;
+    }
+
+
+document.querySelectorAll("#backingVocalsSection .voice-part").forEach(container => {
+    const part = container.dataset.part;
+    const recordBtn = container.querySelector('button[data-role="record"]');
+    const uploadBtn = container.querySelector('button[data-role="upload"]');
+    const fileInput = document.createElement("input");
+    fileInput.type = "file";
+    fileInput.accept = "audio/*";
+    fileInput.style.display = "none";
+    container.appendChild(fileInput);
+
+    // Record button
+    recordBtn.addEventListener("click", async () => {
+        // toggle behavior
+        if (backingIsRecording && activeBackingPart === part) {
+            stopBackingRecording();
+            recordBtn.textContent = "🎙️ Record";
+            return;
+        }
+
+        // if another part is recording, stop it first
+        if (backingIsRecording && activeBackingPart !== part) {
+            stopBackingRecording();
+        }
+
+        recordBtn.textContent = "⏹️ Stop";
+        await startBackingRecording(part);
+    });
+
+    // Upload button
+    uploadBtn.addEventListener("click", () => fileInput.click());
+    fileInput.addEventListener("change", (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+        const partState = backingState[part];
+        partState.file = file;
+        partState.blob = null; // prefer upload over previous recording
+        const url = URL.createObjectURL(file);
+        partState.audioEl.src = url;
+        partState.audioEl.style.display = "block";
+        partState.statusEl.textContent = `✓ ${file.name}`;
+    });
+});
+    
+    // Preview Backing Vocal Mix
+    previewBackingMixBtn.addEventListener("click", () => {
+        const activeParts = backingParts
+            .map(p => backingState[p])
+            .filter(s => (s.blob || s.file) && s.audioEl);
+
+        if (activeParts.length === 0) {
+            showStatus("No backing vocal parts recorded or uploaded yet.", "error");
+            return;
+        }
+
+        const anyPlaying = activeParts.some(s => !s.audioEl.paused);
+
+        if (anyPlaying) {
+            // pause all if something is already playing
+            activeParts.forEach(s => s.audioEl.pause());
+            return;
+        }
+
+        // restart all at 0 and play together
+        activeParts.forEach(s => {
+            s.audioEl.currentTime = 0;
+            const p = s.audioEl.play();
+            if (p && typeof p.catch === "function") {
+                p.catch(() => {});
+            }
+        });
+    });
+
+
+
+
+
+    // ===== REFERENCE TRACK SEARCH =====
+    searchBtn.addEventListener('click', async () => {
+        const query = referenceSearch.value.trim();
+        if (!query) return;
+
+        referenceResults.innerHTML = '<div class="hint">Searching...</div>';
+        try {
+            const response = await fetch(`/search-reference?q=${encodeURIComponent(query)}`);
+            const tracks = await response.json();
+
+            referenceResults.innerHTML = '';
+            tracks.forEach(track => {
+                const div = document.createElement('div');
+                div.className = 'reference-item';
+                div.innerHTML = `
+                    <div class="reference-title">${track.title}</div>
+                    <div class="reference-artist">${track.artist}</div>
+                    <div class="reference-duration">${Math.floor(track.duration / 60)}:${String(track.duration % 60).padStart(2, '0')}</div>
+                `;
+                div.addEventListener('click', () => {
+                    document.querySelectorAll('.reference-item').forEach(el => el.classList.remove('selected'));
+                    div.classList.add('selected');
+                    selectedReferenceUrl = track.preview_url;
+                    referenceStatus.textContent = `✓ Selected: ${track.title}`;
+
+                    // preview the reference (Deezer preview URL)
+                    if (track.preview_url) {
+                        referencePreview.src = track.preview_url;
+                        referencePreview.style.display = 'block';
+                        referencePreview.play().catch(() => {});
+                    }
+                });
+                referenceResults.appendChild(div);
+            });
+        } catch (error) {
+            console.error(error);
+            showStatus('Search failed. Please try again.', 'error');
+        }
+    });
+
+    // ===== REFERENCE FILE UPLOAD =====
+    uploadRefBtn.addEventListener('click', () => referenceFile.click());
+    referenceFile.addEventListener('change', (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            referenceStatus.textContent = `✓ ${file.name}`;
+            const url = URL.createObjectURL(file);
+            referencePreview.src = url;
+            referencePreview.style.display = 'block';
+            selectedReferenceUrl = null; // using uploaded reference instead of URL
+        }
+    });
+
+    // ===== MIXING PROFILE SELECTION =====
+    document.querySelectorAll('.profile-option').forEach(option => {
+        option.addEventListener('click', () => {
+            document.querySelectorAll('.profile-option').forEach(el => el.classList.remove('selected'));
+            option.classList.add('selected');
+            selectedMixingProfile = option.dataset.profile;
+        });
+    });
+
+    // ===== MASTERING TOGGLE =====
+    masteringToggle.addEventListener('click', () => {
+        masteringToggle.classList.toggle('on');
+        masteringEnabled = masteringToggle.classList.contains('on');
+    });
+
+    // ===== LEVEL SLIDERS =====
+    vocalLevel.addEventListener('input', (e) => {
+        vocalLevelValue.textContent = `${e.target.value} dB`;
+    });
+    musicLevel.addEventListener('input', (e) => {
+        musicLevelValue.textContent = `${e.target.value} dB`;
+    });
+
+    // ===== GENERATION =====
+    generateBtn.addEventListener('click', async () => {
+        const uploadedVocalFile = document.getElementById('vocalFile').files[0];
+        if (!uploadedVocalFile && !recordedVocalBlob) {
+            showStatus('Please provide a vocal by uploading or recording.', 'error');
+            return;
+        }
+
+        setLoading(true);
+        const formData = new FormData();
+
+        if (recordedVocalBlob) {
+            formData.append('vocal', recordedVocalBlob, 'recorded_vocal.webm');
+        } else if (uploadedVocalFile) {
+            formData.append('vocal', uploadedVocalFile);
+        }
+
+        // Backing vocal stems (optional)
+        backingParts.forEach(part => {
+        const partState = backingState[part];
+        if (partState.blob) {
+            formData.append("backing_vocals", partState.blob, `${part}_backing.webm`);
+        } else if (partState.file) {
+            formData.append("backing_vocals", partState.file, `${part}_backing.${partState.file.name.split(".").pop()}`);
+        }
+        });
+
+
+
+        if (selectedReferenceUrl) {
+            formData.append('reference_url', selectedReferenceUrl);
+        } else if (referenceFile.files[0]) {
+            formData.append('reference_track', referenceFile.files[0]);
+        }
+
+        const selectedInstruments = [
+            'drums', 'bass', 'piano', 'guitar', 'strings', 'brass'
+        ].filter(inst => document.getElementById(`inst${inst.charAt(0).toUpperCase() + inst.slice(1)}`).checked);
+
+        formData.append('selected_instruments', selectedInstruments.join(','));
+        formData.append('style', document.getElementById('musicStyle').value);
+        formData.append('complexity', document.getElementById('complexity').value);
+        formData.append('mixing_profile', selectedMixingProfile);
+        formData.append('vocal_double', document.getElementById('vocalDouble').checked);
+        formData.append('vocal_reverb', document.getElementById('vocalReverb').checked);
+        formData.append('vocal_echo', document.getElementById('vocalEcho').checked);
+        formData.append('vocal_harmony', document.getElementById('vocalHarmony').checked);
+        formData.append('vocal_level', vocalLevel.value);
+        formData.append('music_level', musicLevel.value);
+        formData.append('apply_mastering', masteringEnabled);
+
+        try {
+            const response = await fetch('/generate-with-instruments', {
+                method: 'POST',
+                body: formData
+            });
+
+            if (!response.ok) {
+                let errorMsg = 'Generation failed';
+                try {
+                    const error = await response.json();
+                    if (error && error.detail) errorMsg = error.detail;
+                } catch (_) {}
+                throw new Error(errorMsg);
+            }
+
+            const blob = await response.blob();
+            const url = URL.createObjectURL(blob);
+
+            finalAudio.src = url;
+            finalAudio.style.display = 'block';
+            downloadBtn.href = url;
+            downloadSection.style.display = 'block';
+            finalAnalysis.style.display = 'block';
+
+            showStatus('✅ Generation complete! Preview your final mix below.', 'success');
+        } catch (error) {
+            console.error(error);
+            showStatus(`Error: ${error.message}`, 'error');
+        } finally {
+            setLoading(false);
+        }
+    });
+
+    function showMicUnblockInstructions() {
+    const browser = navigator.userAgent.toLowerCase();
+
+    // Remove any previous instruction block so it doesn't duplicate
+    const oldBlock = document.getElementById("mic-unblock-help");
+    if (oldBlock) oldBlock.remove();
+
+    // Build new instruction block
+    const container = document.createElement("div");
+    container.id = "mic-unblock-help";
+    container.style.marginTop = "10px";
+    container.style.fontSize = "14px";
+    container.style.lineHeight = "1.5";
+
+    let html = `
+        <p><strong>To re-enable your microphone:</strong></p>
+        <ul>
+            <li>Click the padlock icon next to your browser’s address bar.</li>
+            <li>Find <strong>Microphone</strong> and set it to <strong>Allow</strong>.</li>
+            <li>Reload this page after changing permission.</li>
+        </ul>
+    `;
+
+    // Chrome / Edge direct settings link (safe to include)
+    if (browser.includes("chrome") || browser.includes("edg/")) {
+        html += `
+            <p>Or open microphone settings directly:</p>
+            <a href="chrome://settings/content/microphone" 
+               target="_blank" 
+               style="color:#0a84ff; text-decoration:underline;">
+                Open microphone settings
+            </a>
+        `;
+    }
+
+    container.innerHTML = html;
+
+    // Show main status message
+    showStatus("Microphone permission blocked.", "error");
+
+    // Append the help block right below the status message
+    statusMessage.insertAdjacentElement("afterend", container);
+}
+
+
+</script>
+
+</body>
+</html>
