@@ -49,7 +49,9 @@ app.add_middleware(
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 STATIC_DIR = BASE_DIR / "static"
-SOUNDFONT_PATH = str(BASE_DIR / "soundfonts" / "FluidR3_GM.sf2")
+SOUNDFONT_PATH = os.environ.get(
+    "SOUNDFONT_PATH", str(BASE_DIR / "app" / "soundfonts" / "GeneralUser-GS.sf2")
+)
 
 app.mount("/static", StaticFiles(directory=str(STATIC_DIR)), name="static")
 ensure_soundfont(SOUNDFONT_PATH)
@@ -399,7 +401,7 @@ async def generate_with_instruments(
             wav_path = midi_path.replace(".mid", ".wav")
             temp_files.append(wav_path)
 
-            print("  ✓ Rendering MIDI to audio with FluidR3...")
+            print("  ✓ Rendering MIDI to audio with FluidSynth...")
             cmd = (
                 f'fluidsynth -ni "{SOUNDFONT_PATH}" "{midi_path}" '
                 f'-F "{wav_path}" -r {sr} -q'
@@ -463,7 +465,7 @@ async def generate_with_instruments(
         mixer = ProfessionalMixMaster(sr)
         mixed = mixer.mix_tracks(
             vocal=vocal_bus,
-            accompaniment=a_bus,
+            band=a_bus,
             vocal_level_db=vocal_level,
             music_level_db=music_level,
             mixing_profile=mixing_profile,

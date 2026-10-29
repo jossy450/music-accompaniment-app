@@ -33,7 +33,7 @@ class ChordProgressionGenerator:
         beat_duration_samples = int((60 / self.tempo) * sr)
         
         # 4. Determine the root note of the key
-        key_root_midi = librosa.note_to_midi(self.key + '4')[0]
+        key_root_midi = int(np.ravel(librosa.note_to_midi(self.key + '4'))[0])
         
         # 5. Define Roman numeral mapping (simplified for major/minor)
         if self.scale == "major":

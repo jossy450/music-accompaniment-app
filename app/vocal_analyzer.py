@@ -38,7 +38,7 @@ class AdvancedVocalGenreAnalyzer:
         articulation = np.mean(zcr)
         
         return {
-            'tempo': float(tempo),
+            'tempo': float(np.atleast_1d(tempo)[0]),  # librosa >= 0.10 returns a 1-element array
             'energy': float(np.clip(energy, 0, 1)),
             'brightness': float(np.clip(brightness, 0, 1)),
             'articulation': float(articulation),
